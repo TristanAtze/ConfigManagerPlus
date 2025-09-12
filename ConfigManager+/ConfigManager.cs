@@ -1,6 +1,7 @@
-﻿using System.Text;
-
+using System.Text;
 using System.Text.Json;
+
+namespace ConfigManagerPlus;
 
 /// <summary>
 /// ConfigManager+ core. Compose providers as layers; last added wins.

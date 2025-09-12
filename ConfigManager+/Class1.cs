@@ -1,7 +1,7 @@
-﻿namespace ConfigManager_
+namespace ConfigManagerPlus;
+
+public class Class1
 {
-    public class Class1
-    {
         // ------------------- USAGE EXAMPLE (Console) -------------------
         // var cfg = new ConfigManagerPlus.ConfigManager()
         //     .AddJson("appsettings.json")
@@ -23,5 +23,4 @@
         // Console.WriteLine(cfg.Dump());
         //
         // Console.ReadKey();
-    }
 }
