@@ -1,10 +1,40 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
-    <RootNamespace>ConfigManager_</RootNamespace>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-  </PropertyGroup>
+	<PropertyGroup>
+		<!-- Target multiple frameworks if you want wide compatibility -->
+		<TargetFrameworks>net8.0</TargetFrameworks>
+
+		<!-- Package information -->
+		<PackageId>ConfigManagerPlus</PackageId>
+		<Version>1.0.0</Version>
+		<Authors>BenSowieja</Authors>
+		<Product>ConfigManagerPlus</Product>
+		<Description>A flexible and lightweight configuration manager for .NET with JSON, YAML, INI, .env support, hot reload, environment and CLI overrides.</Description>
+		<PackageTags>configuration config json yaml ini dotenv env cli</PackageTags>
+		<RepositoryUrl>https://github.com/TristanAtze/ConfigManagerPlus</RepositoryUrl>
+		<PackageProjectUrl>https://github.com/TristanAtze/ConfigManagerPlus</PackageProjectUrl>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+
+		<!-- NuGet build settings -->
+		<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+		<IncludeSymbols>true</IncludeSymbols>
+		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
+		<EmbedUntrackedSources>true</EmbedUntrackedSources>
+
+		<!-- Build options -->
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<LangVersion>latest</LangVersion>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<!-- Optional: if you later want YAML via YamlDotNet instead of minimal parser -->
+		<!-- <PackageReference Include="YamlDotNet" Version="15.1.2" /> -->
+	</ItemGroup>
+
+	<ItemGroup>
+		<None Include="README.md" Pack="true" PackagePath="" />
+	</ItemGroup>
 
 </Project>
