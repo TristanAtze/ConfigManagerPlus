@@ -1,6 +1,7 @@
 ﻿using System.Text;
 
 using System.Text.Json;
+using System.Threading.Tasks;
 
 /// <summary>
 /// ConfigManager+ core. Compose providers as layers; last added wins.
@@ -154,10 +155,10 @@ public sealed class ConfigManager : IDisposable
             {
                 NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.Size | NotifyFilters.FileName | NotifyFilters.CreationTime
             };
-            watcher.Changed += (s, e) => OnFileChanged(layer, e);
-            watcher.Created += (s, e) => OnFileChanged(layer, e);
-            watcher.Deleted += (s, e) => OnFileChanged(layer, e);
-            watcher.Renamed += (s, e) => OnFileChanged(layer, e);
+            watcher.Changed += async (s, e) => await OnFileChanged(layer, e).ConfigureAwait(false);
+            watcher.Created += async (s, e) => await OnFileChanged(layer, e).ConfigureAwait(false);
+            watcher.Deleted += async (s, e) => await OnFileChanged(layer, e).ConfigureAwait(false);
+            watcher.Renamed += async (s, e) => await OnFileChanged(layer, e).ConfigureAwait(false);
             watcher.IncludeSubdirectories = false;
             watcher.EnableRaisingEvents = true;
             layer.Watcher = watcher;
@@ -168,12 +169,12 @@ public sealed class ConfigManager : IDisposable
         }
     }
 
-    private void OnFileChanged(ConfigLayer layer, FileSystemEventArgs e)
+    private async Task OnFileChanged(ConfigLayer layer, FileSystemEventArgs e)
     {
         try
         {
             // debounce small bursts
-            System.Threading.Thread.Sleep(50);
+            await Task.Delay(50).ConfigureAwait(false);
             var fresh = layer.Provider.Load(layer.Path);
             Dictionary<string, string> before, after;
 
