@@ -101,7 +101,16 @@ cfg.Changed += (s, e) =>
 
 ## 🛡️ Secret Masking
 
-Keys containing `password`, `secret`, `token`, `key`, `connectionstring` are automatically masked in `Dump()`:
+Keys matching patterns like `password`, `secret`, `token`, `apikey`, or `connectionstring` are automatically masked in `Dump()`.
+The detection uses case-insensitive regular expressions and the pattern list can be customized:
+
+```csharp
+// Replace the defaults
+ConfigManager.ConfigureSecretHints(new[] { "passw.*", "mysecret" });
+
+// Add an extra pattern
+ConfigManager.AddSecretHint("custom_token");
+```
 
 ```
 Database:ConnectionString = ************True;

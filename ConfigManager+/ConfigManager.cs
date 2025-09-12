@@ -1,6 +1,7 @@
 ﻿using System.Text;
 
 using System.Text.Json;
+using System.Text.RegularExpressions;
 
 /// <summary>
 /// ConfigManager+ core. Compose providers as layers; last added wins.
@@ -13,8 +14,41 @@ public sealed class ConfigManager : IDisposable
     private Dictionary<string, string> _merged = new(StringComparer.OrdinalIgnoreCase);
     private int _orderCounter = 0;
 
-    // Secret masking keywords (case-insensitive substring match)
-    private static readonly string[] SecretHints = new[] { "password", "pwd", "secret", "token", "apikey", "api_key", "key", "private", "connectionstring" };
+    // Secret masking patterns (case-insensitive)
+    private static readonly List<Regex> SecretPatterns = new()
+    {
+        new("password", RegexOptions.IgnoreCase),
+        new("pwd", RegexOptions.IgnoreCase),
+        new("secret", RegexOptions.IgnoreCase),
+        new("token", RegexOptions.IgnoreCase),
+        new("apikey", RegexOptions.IgnoreCase),
+        new("api_key", RegexOptions.IgnoreCase),
+        new("private", RegexOptions.IgnoreCase),
+        new("connectionstring", RegexOptions.IgnoreCase)
+    };
+
+    /// <summary>
+    /// Replace the default secret detection patterns.
+    /// </summary>
+    public static void ConfigureSecretHints(IEnumerable<string> patterns)
+    {
+        if (patterns is null) throw new ArgumentNullException(nameof(patterns));
+        SecretPatterns.Clear();
+        foreach (var p in patterns)
+        {
+            if (string.IsNullOrWhiteSpace(p)) continue;
+            SecretPatterns.Add(new Regex(p, RegexOptions.IgnoreCase));
+        }
+    }
+
+    /// <summary>
+    /// Add an additional secret detection pattern.
+    /// </summary>
+    public static void AddSecretHint(string pattern)
+    {
+        if (string.IsNullOrWhiteSpace(pattern)) return;
+        SecretPatterns.Add(new Regex(pattern, RegexOptions.IgnoreCase));
+    }
 
     public event EventHandler<ConfigChangedEventArgs>? Changed;
     public event EventHandler<Exception>? Error;
@@ -353,7 +387,7 @@ public sealed class ConfigManager : IDisposable
     }
 
     private static bool IsSecretKey(string key)
-        => SecretHints.Any(h => key.IndexOf(h, StringComparison.OrdinalIgnoreCase) >= 0);
+        => SecretPatterns.Any(r => r.IsMatch(key));
     private static string Mask(string? v)
     {
         if (string.IsNullOrEmpty(v)) return string.Empty;
