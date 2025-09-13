@@ -1,4 +1,6 @@
-﻿using System.Text;
+using System.Text;
+
+namespace ConfigManagerPlus;
 
 public sealed class IniConfigProvider : IConfigProvider
 {

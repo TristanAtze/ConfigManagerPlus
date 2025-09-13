@@ -1,4 +1,6 @@
-﻿/// <summary>
+namespace ConfigManagerPlus;
+
+/// <summary>
 /// Provider contract: loads a source file and returns flattened key-value pairs ("A:B:C" -> value).
 /// </summary>
 public interface IConfigProvider
@@ -7,3 +9,4 @@ public interface IConfigProvider
     IDictionary<string, string> Load(string path);
     bool SupportsHotReload { get; }
 }
+

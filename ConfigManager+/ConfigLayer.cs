@@ -1,4 +1,6 @@
-﻿/// <summary>
+namespace ConfigManagerPlus;
+
+/// <summary>
 /// Represents one configured source layer (file/env/args) with precedence and optional watcher.
 /// </summary>
 internal sealed class ConfigLayer
@@ -10,7 +12,6 @@ internal sealed class ConfigLayer
     public IDictionary<string, string> Data { get; set; }
     public bool IsDynamic { get; } // env/args
 
-
     public ConfigLayer(string path, IConfigProvider provider, int order, bool isDynamic, IDictionary<string, string> data)
     {
         Path = path;
@@ -20,3 +21,4 @@ internal sealed class ConfigLayer
         Data = data;
     }
 }
+

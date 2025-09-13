@@ -1,10 +1,14 @@
-﻿public sealed class SectionView
+namespace ConfigManagerPlus;
+
+public sealed class SectionView
 {
     private readonly ConfigManager _mgr;
     private readonly string _prefix; // normalized ends with ':'
+
     internal SectionView(ConfigManager mgr, string prefix)
     {
-        _mgr = mgr; _prefix = prefix;
+        _mgr = mgr;
+        _prefix = prefix;
     }
 
     private string Key(string key) => string.Concat(_prefix, key);
@@ -22,3 +26,4 @@
     public T Bind<T>() where T : new() => _mgr.Bind<T>(_prefix.TrimEnd(':'));
     public override string ToString() => _prefix; // debug
 }
+
