@@ -22,7 +22,7 @@ public sealed class SectionView
     public double GetDouble(string key, double def = 0) => _mgr.GetDouble(Key(key), def);
     public TimeSpan GetTimeSpan(string key, TimeSpan def) => _mgr.GetTimeSpan(Key(key), def);
     public Guid GetGuid(string key, Guid def) => _mgr.GetGuid(Key(key), def);
-    public SectionView Section(string child) => new SectionView(_mgr, _mgr.Section(string.Concat(_prefix, child)).ToString());
+    public SectionView Section(string child) => _mgr.Section(_prefix + child);
     public T Bind<T>() where T : new() => _mgr.Bind<T>(_prefix.TrimEnd(':'));
     public override string ToString() => _prefix; // debug
 }
