@@ -9,4 +9,3 @@ public interface IConfigProvider
     IDictionary<string, string> Load(string path);
     bool SupportsHotReload { get; }
 }
-

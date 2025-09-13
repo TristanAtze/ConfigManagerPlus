@@ -22,4 +22,3 @@ public sealed class ConfigChangedEventArgs : EventArgs
         SourceName = sourceName;
     }
 }
-

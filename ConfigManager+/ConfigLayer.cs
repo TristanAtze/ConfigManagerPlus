@@ -21,4 +21,3 @@ internal sealed class ConfigLayer
         Data = data;
     }
 }
-
