@@ -1,5 +1,6 @@
 using System.Text;
 using System.Text.Json;
+using System.Threading.Tasks;
 
 namespace ConfigManagerPlus;
 
@@ -155,10 +156,10 @@ public sealed class ConfigManager : IDisposable
             {
                 NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.Size | NotifyFilters.FileName | NotifyFilters.CreationTime
             };
-            watcher.Changed += (s, e) => OnFileChanged(layer, e);
-            watcher.Created += (s, e) => OnFileChanged(layer, e);
-            watcher.Deleted += (s, e) => OnFileChanged(layer, e);
-            watcher.Renamed += (s, e) => OnFileChanged(layer, e);
+            watcher.Changed += (s, e) => _ = Task.Run(() => OnFileChanged(layer, e)).ContinueWith(t => { if (t.Exception != null) Error?.Invoke(this, t.Exception); }, TaskContinuationOptions.OnlyOnFaulted);
+            watcher.Created += (s, e) => _ = Task.Run(() => OnFileChanged(layer, e)).ContinueWith(t => { if (t.Exception != null) Error?.Invoke(this, t.Exception); }, TaskContinuationOptions.OnlyOnFaulted);
+            watcher.Deleted += (s, e) => _ = Task.Run(() => OnFileChanged(layer, e)).ContinueWith(t => { if (t.Exception != null) Error?.Invoke(this, t.Exception); }, TaskContinuationOptions.OnlyOnFaulted);
+            watcher.Renamed += (s, e) => _ = Task.Run(() => OnFileChanged(layer, e)).ContinueWith(t => { if (t.Exception != null) Error?.Invoke(this, t.Exception); }, TaskContinuationOptions.OnlyOnFaulted);
             watcher.IncludeSubdirectories = false;
             watcher.EnableRaisingEvents = true;
             layer.Watcher = watcher;
@@ -169,12 +170,12 @@ public sealed class ConfigManager : IDisposable
         }
     }
 
-    private void OnFileChanged(ConfigLayer layer, FileSystemEventArgs e)
+    private async Task OnFileChanged(ConfigLayer layer, FileSystemEventArgs e)
     {
         try
         {
             // debounce small bursts
-            System.Threading.Thread.Sleep(50);
+            await Task.Delay(50).ConfigureAwait(false);
             var fresh = layer.Provider.Load(layer.Path);
             Dictionary<string, string> before, after;
 
