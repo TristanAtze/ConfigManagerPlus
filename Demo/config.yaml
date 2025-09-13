@@ -1,0 +1,4 @@
+Server:
+  Port: 5001
+Database:
+  ConnectionString: yaml-connection
