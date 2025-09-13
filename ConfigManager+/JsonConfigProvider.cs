@@ -1,5 +1,7 @@
-﻿using System.Text;
+using System.Text;
 using System.Text.Json;
+
+namespace ConfigManagerPlus;
 
 public sealed class JsonConfigProvider : IConfigProvider
 {
