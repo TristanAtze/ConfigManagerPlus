@@ -155,10 +155,10 @@ public sealed class ConfigManager : IDisposable
             {
                 NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.Size | NotifyFilters.FileName | NotifyFilters.CreationTime
             };
-            watcher.Changed += async (s, e) => await OnFileChanged(layer, e).ConfigureAwait(false);
-            watcher.Created += async (s, e) => await OnFileChanged(layer, e).ConfigureAwait(false);
-            watcher.Deleted += async (s, e) => await OnFileChanged(layer, e).ConfigureAwait(false);
-            watcher.Renamed += async (s, e) => await OnFileChanged(layer, e).ConfigureAwait(false);
+            watcher.Changed += (s, e) => _ = Task.Run(() => OnFileChanged(layer, e)).ContinueWith(t => { if (t.Exception != null) Error?.Invoke(this, t.Exception); }, TaskContinuationOptions.OnlyOnFaulted);
+            watcher.Created += (s, e) => _ = Task.Run(() => OnFileChanged(layer, e)).ContinueWith(t => { if (t.Exception != null) Error?.Invoke(this, t.Exception); }, TaskContinuationOptions.OnlyOnFaulted);
+            watcher.Deleted += (s, e) => _ = Task.Run(() => OnFileChanged(layer, e)).ContinueWith(t => { if (t.Exception != null) Error?.Invoke(this, t.Exception); }, TaskContinuationOptions.OnlyOnFaulted);
+            watcher.Renamed += (s, e) => _ = Task.Run(() => OnFileChanged(layer, e)).ContinueWith(t => { if (t.Exception != null) Error?.Invoke(this, t.Exception); }, TaskContinuationOptions.OnlyOnFaulted);
             watcher.IncludeSubdirectories = false;
             watcher.EnableRaisingEvents = true;
             layer.Watcher = watcher;
